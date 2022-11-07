@@ -15,28 +15,17 @@ public abstract class GameEntity {
 	// Fields
 	private final boolean endGame;
 	private final String message;
-	private Pair<Integer, Integer> position;
+	private final Pair<Integer, Integer> position;
 	
 	
 	// Constructor
-	GameEntity(int gridSize, boolean endGame, String message){
+	GameEntity(Pair<Integer, Integer> position, boolean endGame, String message){
 		// Generate position
-		setPosition(gridSize);
+		this.position = position;
 		
 		this.endGame = endGame;
 		
 		this.message = message;
-	}
-	
-	public void setPosition(int gridSize) {
-		this.position = new Pair<Integer, Integer>(genRandom(gridSize), genRandom(gridSize));
-	}
-	
-	// Implement this
-	public static int genRandom(int max) {
-		
-		return ThreadLocalRandom.current().nextInt(0,max);
-
 	}
 	
 	public boolean isEndGame() {
@@ -50,7 +39,7 @@ public abstract class GameEntity {
 	public Pair<Integer, Integer> getPosition(){
 		return this.position;
 	}
-	
+
 	public int getxPos() {
 		return position.getValue0();
 	}
@@ -59,7 +48,29 @@ public abstract class GameEntity {
 		return position.getValue1();
 	}
 
-	
-	//Map.get(Position);
-	// Monster is at (2,3) map.get((2,3)) will return the monster
+	@Override
+	public String toString(){
+		return "endGame: " + endGame + " "
+			+  "position: " + position + " "
+			+  "message: " + message + " "
+			+  "type: " + this.getClass();
+	}
+
+	@Override 
+	public boolean equals(Object obj){
+		if(obj == null) { 
+			return false; 
+		}
+
+		if(obj.getClass() != this.getClass()) { 
+			return false; 
+		}
+
+		GameEntity entity = (GameEntity) obj;
+
+		return entity.message == this.message
+			&& entity.endGame == this.endGame
+			&& entity.position == this.position;
+	}
+
 }

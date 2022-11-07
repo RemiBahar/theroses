@@ -51,4 +51,15 @@ public void addEntity(GameEntity entity) {
 
 	}
 
+	@Override 
+	public String toString(){
+		String returnValue = "";
+
+		for(GameEntity entity : gi.values()){
+			returnValue += entity.toString();
+		}
+
+		return returnValue;
+	}
+
 }

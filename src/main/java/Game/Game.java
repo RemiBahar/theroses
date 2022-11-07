@@ -2,6 +2,8 @@ package Game;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.javatuples.Pair;
+
 public class Game {
 	
 	/*
@@ -40,35 +42,44 @@ public class Game {
         this.grid_size = grid_size;
         this.noOfMons = noOfMons;
         
-        p = new Player(grid_size);
+        p = new Player(randomPosition());
         
         //GameEntity[] gi = new GameEntity[1+noOfTreas+noOfMons];
         
         entitiesInPlay = new EntitiesInPlay();
+		entitiesInPlay.addEntity(this.p);
         
         // Add treasure
-        Treasure treasure = new Treasure(grid_size);
-        this.t = treasure;
+        Pair<Integer, Integer> treasurePosition = randomPosition();
         
-        while(entitiesInPlay.getEntity(treasure.getPosition()) != null  && treasure.getPosition().equals(p.getPosition())) {
-        	treasure.setPosition(grid_size);
+        while(entitiesInPlay.getEntity(treasurePosition) != null) {
+        	treasurePosition = randomPosition();
         }
         
-        entitiesInPlay.addEntity(treasure);
+		this.t = new Treasure(treasurePosition);
+        entitiesInPlay.addEntity(this.t);
 
         // Add monsters
         for (int i = 0; i < noOfMons; i++) {
-            Monster monster = new Monster(grid_size);
-            monster.setPosition(grid_size);
+			Pair<Integer, Integer> monsterPosition = randomPosition();
+            //monster.setRandomPosition(grid_size);
             
-            while(monster.getPosition().equals(p.getPosition()) || monster.getPosition().equals(treasure.getPosition())) {
-            	monster.setPosition(grid_size);
+            //while(monster.getPosition().equals(p.getPosition()) || monster.getPosition().equals(treasure.getPosition())) {
+				while(entitiesInPlay.getEntity(monsterPosition) != null) {
+					monsterPosition = randomPosition();
             }
-            
+			
+            Monster monster = new Monster(monsterPosition);
             entitiesInPlay.addEntity(monster);
         }
+
    
     }
+
+	public Pair<Integer, Integer> randomPosition() {
+		return new Pair<Integer, Integer>(genRandom(grid_size), genRandom(grid_size));
+	}
+
 	
 	public void movePlayer(int direction) {
 		
